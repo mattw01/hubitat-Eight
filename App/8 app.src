@@ -165,11 +165,8 @@ def selectDevicePAGE() {
 def notificationsPAGE() {
 	dynamicPage(name: "notificationsPAGE", title: "Preferences", uninstall: false, install: false) {
     	section {
-        	input("recipients", "contact", title: "Send notifications to", required: false, submitOnChange: true) {
-				input "sendPush", "bool", title: "Send notifications via Push?", required: false, defaultValue: false, submitOnChange: true
-            }
             input "sendSMS", "phone", title: "Send notifications via SMS?", required: false, defaultValue: null, submitOnChange: true
-            if ((location.contactBookEnabled && settings.recipients) || settings.sendPush || settings.sendSMS != null) {
+            if (settings.sendSMS != null) {
 				input "onNotification", "bool", title: "Notify when Eight Sleep heat is on ", required: false, defaultValue: false
 				input "offNotification", "bool", title: "Notify when Eight Sleep heat is off ", required: false, defaultValue: false
 				input "inBedNotification", "bool", title: "Notify when 'In Bed' event occurs", required: false, defaultValue: false
@@ -219,26 +216,15 @@ def getDevicesSelectedString() {
 }
 
 def notificationsSelected() {
-    return ((location.contactBookEnabled && settings.recipients) || settings.sendPush || settings.sendSMS != null) && (settings.onNotification || settings.offNotification || settings.inBedNotification || settings.outOfBedNotification || settings.heatLevelReachedNotification || settings.sleepScoreNotification) ? "complete" : null
+    return (settings.sendSMS != null) && (settings.onNotification || settings.offNotification || settings.inBedNotification || settings.outOfBedNotification || settings.heatLevelReachedNotification || settings.sleepScoreNotification) ? "complete" : null
 }
 
 def getNotificationsString() {
 	def listString = ""
-    if (location.contactBookEnabled && settings.recipients) { 
-    	listString += "Send the following notifications to " + settings.recipients
-    }
-    else if (settings.sendPush) {
-    	listString += "Send the following notifications"
-    }
-    
-    if (!settings.recipients && !settings.sendPush && settings.sendSMS != null) {
+    if (settings.sendSMS != null) {
     	listString += "Send the following SMS to ${settings.sendSMS}"
     }
-    else if (settings.sendSMS != null) {
-    	listString += " and SMS to ${settings.sendSMS}"
-    }
-    
-    if ((location.contactBookEnabled && settings.recipients) || settings.sendPush || settings.sendSMS != null) {
+    if (settings.sendSMS != null) {
     	listString += ":\n"
         if (settings.onNotification) listString += "• Eight Sleep On\n"
         if (settings.offNotification) listString += "• Eight Sleep Off\n"
@@ -647,11 +633,6 @@ def messageHandler(msg, forceFlag) {
 	log.debug "Executing 'messageHandler for $msg. Forcing is $forceFlag'"
 	if (settings.sendSMS != null && !forceFlag) {
 		sendSms(settings.sendSMS, msg) 
-	}
-    if (location.contactBookEnabled && settings.recipients) {
-    	sendNotificationToContacts(msg, settings.recipients)
-    } else if (settings.sendPush || forceFlag) {
-		sendPush(msg)
 	}
 }
 
