@@ -485,15 +485,17 @@ def getEightSleepPartnerAccessToken() {
 }
 
 def apiGET(path) {
+    def result
 	try {   			
         httpGet(uri: apiURL(path), headers: apiRequestHeaders()) {response ->
 			logResponse(response)
-			return response
+			result = response
 		}
 	} catch (groovyx.net.http.HttpResponseException e) {
 		logResponse(e.response)
-		return e.response
+		result = e.response
 	}
+	return result
 }
 
 def apiGETWithPartner(path) {
@@ -515,29 +517,33 @@ def apiGETWithPartner(path) {
 }
 
 def apiPOST(path, body = [:]) {
+    def result
 	try {
 		log.debug("Beginning API POST: ${path}, ${body}")
 		httpPost(uri: apiURL(path), body: new groovy.json.JsonBuilder(body).toString(), headers: apiRequestHeaders() ) {response ->
 			logResponse(response)
-			return response
+			result = response
 		}
 	} catch (groovyx.net.http.HttpResponseException e) {
 		logResponse(e.response)
-		return e.response
+		result = e.response
 	}
+	return result
 }
 
 def apiPUT(path, body = [:]) {
+    def result
 	try {
 		log.debug("Beginning API POST: ${path}, ${body}")
 		httpPut(uri: apiURL(path), body: new groovy.json.JsonBuilder(body).toString(), headers: apiRequestHeaders() ) {response ->
 			logResponse(response)
-			return response
+			result = response
 		}
 	} catch (groovyx.net.http.HttpResponseException e) {
 		logResponse(e.response)
-		return e.response
+		result = e.response
 	}
+	return result
 }
 
 Map apiRequestHeaders() {
