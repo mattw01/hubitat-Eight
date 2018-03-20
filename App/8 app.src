@@ -389,7 +389,7 @@ def addEightSleep() {
             			name: "${state.eightSleepDevices[device]} [Left]",
 						label: "${state.eightSleepDevices[device]} [Left]"
 					]
-            		childDevice = addChildDevice(app.namespace, "Eight Sleep Mattress", "${device}/${leftUserId}", null, data)
+            		childDevice = addChildDevice("alyc100", "Eight Sleep Mattress", "${device}/${leftUserId}", null, data)
 					log.debug "Created ${state.eightSleepDevices[device]} [Left] with id: ${device}/${leftUserId}"
 				} else {
 					log.debug "found ${state.eightSleepDevices[device]} [Left] with id ${device}/${leftUserId} already exists"
@@ -405,7 +405,7 @@ def addEightSleep() {
             			name: "${state.eightSleepDevices[device]} [Right]",
 						label: "${state.eightSleepDevices[device]} [Right]"
 					]
-            		childDevice = addChildDevice(app.namespace, "Eight Sleep Mattress", "${device}/${rightUserId}", null, data)
+            		childDevice = addChildDevice("alyc100", "Eight Sleep Mattress", "${device}/${rightUserId}", null, data)
 					log.debug "Created ${state.eightSleepDevices[device]} [Right] with id: ${device}/${rightUserId}"
 				} else {
 					log.debug "found ${state.eightSleepDevices[device]} [Right] with id ${device}/${rightUserId} already exists"
@@ -450,7 +450,7 @@ def getEightSleepAccessToken() {
     if (resp.status == 200) {
 		state.eightSleepAccessToken = resp.data.session.token
         state.userId = resp.data.session.userId
-        atomicState.expirationDate = resp.data.session.expirationDate
+        state.expirationDate = resp.data.session.expirationDate
         log.debug "eightSleepAccessToken: $resp.data.session.token"  
         log.debug "eightSleepUserId: $resp.data.session.userId"  
         log.debug "eightSleepTokenExpirationDate: $resp.data.session.expirationDate" 
